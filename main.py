@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from generate_words import *
+import generate_words
 import random
 
 
@@ -20,10 +20,10 @@ def main():
         screen.blit(img, (x, y))
 
     # get words for game from generate_words.py
-    word_list = get_keywords()
+    word_list = generate_words.get_keywords()
     # break apart words into letters
-    letters = get_letters(word_list)
-    group_letters(word_list)
+    letters = generate_words.get_letters(word_list)
+    generate_words.group_letters(word_list)
     active_box = None
     boxes = []
     # Generate Boxes
@@ -42,7 +42,7 @@ def main():
         for num, letter in enumerate(letters):
             pygame.draw.rect(screen, "BLUE", boxes[num])
             draw_text(letter, text_font, "YELLOW", boxes[num].x, boxes[num].y)
-    # EVENTS
+    # EVENTS (CLICK N DRAG)
         for event in pygame.event.get():
             # click and drag event. Check for MOUSEBUTTONDOWN and MOUSEBUTTONUP event.button == 1
             if event.type == pygame.MOUSEBUTTONDOWN:
