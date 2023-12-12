@@ -3,7 +3,7 @@ from pygame.locals import *
 import generate_words
 import random
 
-
+# noinspection SpellCheckingInspection
 def main():
     pygame.init()
     SCREEN_WIDTH = 640
@@ -21,28 +21,39 @@ def main():
 
     # get words for game from generate_words.py
     word_list = generate_words.get_keywords()
+    print("Word list: ", word_list)
     # break apart words into letters
     letters = generate_words.get_letters(word_list)
-    generate_words.group_letters(word_list)
+    letters_set = generate_words.group_letters(word_list)
     active_box = None
     boxes = []
-    # Generate Boxes
-    for i in range(len(letters)):
-        x = random.randint(50, SCREEN_WIDTH - 50)
-        y = random.randint(50, SCREEN_HEIGHT - 50)
-        box = pygame.Rect(x, y, 50, 50)
-        boxes.append(box)
+    box_x = 100
+    box_y = 100
+    # **TODO** change this to be ordered based on letter group sets
+    # TODO change to match # of letters from group_letters
+    i = 0
+    for i in range(len(letters_set[i]) - 1):
+        for j in range(len(letters_set) - 1):
+            box = pygame.Rect(box_x, box_y, 50, 50)
+            boxes.append(box)
+            box_y += 51
+        box_x += 51
+        box_y = 100
+        i += 1
+    print("Boxes: ", boxes)
+    print("Length boxes: ", len(boxes))
 # MAIN GAME LOOP
     run = True
     while run:
 
         screen.fill("BLACK")
 
-        # draw boxes to screen
-        for num, letter in enumerate(letters):
-            pygame.draw.rect(screen, "BLUE", boxes[num])
-            draw_text(letter, text_font, "YELLOW", boxes[num].x, boxes[num].y)
-    # EVENTS (CLICK N DRAG)
+        for i in range(len(letters_set)):
+            for num, letter in enumerate(letters_set[i]):
+                pygame.draw.rect(screen, "BLUE", boxes[i])
+                draw_text(letter, text_font, "YELLOW", boxes[num].x, boxes[num].y)
+
+    # EVENTS (CLICK N DRAG)--v
         for event in pygame.event.get():
             # click and drag event. Check for MOUSEBUTTONDOWN and MOUSEBUTTONUP event.button == 1
             if event.type == pygame.MOUSEBUTTONDOWN:

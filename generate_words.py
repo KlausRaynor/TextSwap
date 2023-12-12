@@ -53,6 +53,7 @@ def get_keywords():
     # validate and assign 2 more random words from word list
     while True:
         kw_two = random.choice(first_index_list)
+        kw_three = random.choice(second_index_list)
         val_two = validate_word(kw_two)
         if val_two:
             kw_three = random.choice(second_index_list)
@@ -93,21 +94,25 @@ def group_letters(word_list):
     # groups is a dictionary with a key of index and a value = set of letters found at that index.
     groups = {}
     group_list = []
-    for n, word in enumerate(word_list):
-        group_list.append(word[n])
-        groups[n] = group_list
-    print("groups: ", groups)
+    i = 0
+    while i < len(word_list[0]):
+        group_list = [word[i] for word in word_list]
+        groups[i] = set(group_list)
+        i += 1
+
+    return groups
+
 
 def validate_word(word):
-        # check key_word validity against API
-        url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
-        response = requests.get(url)
-        # extract JSON data
-        response_ans = response.json()
-        # verify it's in common dictionary, otherwise search for new word
-        try:
-            if response_ans["title"] == "No Definitions Found":
-                return False
-        except Exception:
-            if response_ans[0]["word"]:
-                return True
+    # check key_word validity against API
+    url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
+    response = requests.get(url)
+    # extract JSON data
+    response_ans = response.json()
+    # verify it's in common dictionary, otherwise search for new word
+    try:
+        if response_ans["title"] == "No Definitions Found":
+            return False
+    except Exception as e:
+        if response_ans[0]["word"]:
+            return True
