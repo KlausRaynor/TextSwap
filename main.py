@@ -1,5 +1,14 @@
+"""
+Author: Klaus Holder
+Date: 12/11/23
+Clone of the text game TypeShift by Zach Gage
+Written in PyGame for CS50 final project
+
+PyGame: https://www.pygame.org/docs/
+TypeShift: http://www.playtypeshift.com/
+"""
+
 import pygame
-from pygame.locals import *
 import generate_words
 import random
 
@@ -33,8 +42,6 @@ def main():
     boxes = []
     box_x = 100
     box_y = 100
-    # **TODO** change this to be ordered based on letter group sets
-    # TODO change to match # of letters from group_letters
     i = 0
     for i in letters_set:
         for _ in letters_set[i]:
@@ -78,20 +85,22 @@ def main():
                     for num, box in enumerate(boxes):
                         if box.collidepoint(event.pos):
                             active_box = num
-
+        # MOUSE MOVEMENT
             if event.type == pygame.MOUSEMOTION:
                 if active_box is not None:
                     _, y = event.rel
                     boxes[active_box].move_ip(0, y)
-
+        # RELEASE MOUSE BUTTON
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     active_box = None
-            # QUIT GAME
+        # QUIT GAME
             if event.type == pygame.QUIT:
                 run = False
         # refresh screen
         pygame.display.flip()
+
+        clock.tick(60)  # FPS
 
 
 if __name__ == "__main__":
