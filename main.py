@@ -11,7 +11,7 @@ TypeShift: http://www.playtypeshift.com/
 
 import pygame
 import generate_words
-import button
+from button import *
 
 
 # noinspection SpellCheckingInspection
@@ -21,6 +21,7 @@ def main():
     SCREEN_HEIGHT = 480
     BOX_WIDTH = 50
     BOX_HEIGHT = 50
+    SCALE = 3
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("TextSwap - A Game by Klaus Holder")
@@ -29,9 +30,18 @@ def main():
     # Game Variables
     game_paused = False
 
+    button_list = []
     # load in button images
-    play_ready_img = pygame.image.load('images/play_button_ready.png')
-    play_pressed_img = pygame.image.load('images/play_button_pressed.png')
+    play_ready_img = pygame.image.load('images/play_button_ready.png').convert_alpha()
+    play_pressed_img = pygame.image.load('images/play_button_pressed.png').convert_alpha()
+
+    # scale images
+    scaled_play_rdy_img = pygame.transform.scale(
+        play_ready_img, (play_ready_img.get_width() * 2, play_ready_img.get_height() * SCALE))
+    scaled_play_pressed_img = pygame.transform.scale(
+        play_pressed_img, (play_pressed_img.get_width() * 2, play_ready_img.get_height() * SCALE))
+
+
     # define font
     text_font = pygame.font.Font("Fonts/baveuse.ttf", 30)
 
@@ -39,6 +49,8 @@ def main():
         img = font.render(text, True, text_col)
         screen.blit(img, (tx, ty))
 
+    def draw_button(b):
+        screen.blit(b.image, (b.rect.x, b.rect.y))
     # get words for game from generate_words.py
     word_list = generate_words.get_keywords()
     print("Word list: ", word_list)
@@ -78,13 +90,29 @@ def main():
     for i in letters_set:
         for letter in letters_set[i]:
             letter_list.append(letter)
-    # END TESTING ****
+
     pause_text = "Press SPACE to pause"
     resume_text = "Press SPACE to resume"
+
+    play_button = Button((SCREEN_WIDTH / 2) - (scaled_play_rdy_img.get_width() / 2), (
+            SCREEN_HEIGHT / 4), scaled_play_rdy_img)
+    play_button_pressed = Button((SCREEN_WIDTH / 2) - (scaled_play_rdy_img.get_width() / 2),
+            (SCREEN_HEIGHT / 4), scaled_play_pressed_img)
+    button_clicked = False
+
+    button_list.append(play_button)
+    button_list.append(play_button_pressed)
+
+    # END TESTING ****
 # MAIN GAME LOOP
     run = True
     while run:
-        screen.fill("BLACK")
+        screen.fill((202, 228, 241))
+        if button_clicked:
+            draw_button(button_list[1])
+        elif not button_clicked:
+            draw_button(button_list[0])
+
         if game_paused == True:
             pass
             draw_text(resume_text, text_font, "RED", (SCREEN_WIDTH)/2 - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 2)
@@ -111,8 +139,11 @@ def main():
                         game_paused = True
             # click and drag event. Check for MOUSEBUTTONDOWN and MOUSEBUTTONUP event.button == 1
             if event.type == pygame.MOUSEBUTTONDOWN:
+
                 # LEFT CLICK
                 if event.button == 1:
+                    if play_button.rect.collidepoint(event.pos):
+                        button_clicked = True
                     # for num, box in enumerate(boxes):
                     #     if box.collidepoint(event.pos):
                     #         active_box = num
@@ -129,6 +160,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     active_box = None
+                    button_clicked = False
         # QUIT GAME
             if event.type == pygame.QUIT:
                 run = False
