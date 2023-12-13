@@ -90,10 +90,9 @@ def get_letters(word_list):
     return letters
 
 
-def group_letters(word_list):
+def create_sets(word_list):
     # groups is a dictionary with a key of index and a value = set of letters found at that index.
     groups = {}
-    group_list = []
     i = 0
     while i < len(word_list[0]):
         group_list = [word[i] for word in word_list]
@@ -111,8 +110,8 @@ def validate_word(word):
     response_ans = response.json()
     # verify it's in common dictionary, otherwise search for new word
     try:
-        if response_ans["title"] == "No Definitions Found":
-            return False
-    except Exception as e:
         if response_ans[0]["word"]:
             return True
+    except Exception as e:
+        if response_ans["title"] == "No Definitions Found":
+            return False

@@ -3,14 +3,15 @@ Author: Klaus Holder
 Date: 12/11/23
 Clone of the text game TypeShift by Zach Gage
 Written in PyGame for CS50 final project
-
+Dictionary lists courtesy of MIT and UMichigan
+Dictionary API used: https://dictionaryapi.dev/
 PyGame: https://www.pygame.org/docs/
 TypeShift: http://www.playtypeshift.com/
 """
 
 import pygame
 import generate_words
-import random
+import button
 
 
 # noinspection SpellCheckingInspection
@@ -25,71 +26,105 @@ def main():
     pygame.display.set_caption("TextSwap - A Game by Klaus Holder")
     clock = pygame.time.Clock()
 
-    text_font = pygame.font.Font("Fonts/baveuse.ttf", 50)
+    # Game Variables
+    game_paused = False
 
-    def draw_text(text, font, text_col, x, y):
+    # load in button images
+    play_ready_img = pygame.image.load('images/play_button_ready.png')
+    play_pressed_img = pygame.image.load('images/play_button_pressed.png')
+    # define font
+    text_font = pygame.font.Font("Fonts/baveuse.ttf", 30)
+
+    def draw_text(text, font, text_col, tx, ty):
         img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+        screen.blit(img, (tx, ty))
 
     # get words for game from generate_words.py
     word_list = generate_words.get_keywords()
     print("Word list: ", word_list)
-    # break apart words into letters
-    letters = generate_words.get_letters(word_list)
+
     # group letters into dictionary of sets
-    letters_set = generate_words.group_letters(word_list)
+    letters_set = generate_words.create_sets(word_list)
 
     boxes = []
     box_x = 100
     box_y = 100
-    i = 0
+
+    col_boxes = []
+
+    # create box list based on # of items in letter_set
     for i in letters_set:
+        col_size = 0
         for _ in letters_set[i]:
             box = pygame.Rect(box_x, box_y, BOX_WIDTH, BOX_HEIGHT)
             boxes.append(box)
             box_y += 51
+            col_size += 1
         box_x += 51
         box_y = 100
+        print("Column Size: ", col_size)
+        # adjust/shift X one column to left by subtracting BOX_WIDTH
+        col_box = pygame.Rect(box_x - BOX_WIDTH, box_y, BOX_WIDTH, BOX_HEIGHT * col_size)
+        col_boxes.append(col_box)
 
-    print("Boxes: ", boxes)
     print("Length boxes: ", len(boxes))
     print("length letters_set: ", len(letters_set))
     print("Letters set: ", letters_set)
     # for click and drag option
     active_box = None
 
-    # TESTING ***
     # move Letters_set to a list
     letter_list = []
     for i in letters_set:
         for letter in letters_set[i]:
             letter_list.append(letter)
     # END TESTING ****
-
+    pause_text = "Press SPACE to pause"
+    resume_text = "Press SPACE to resume"
 # MAIN GAME LOOP
     run = True
     while run:
         screen.fill("BLACK")
-        for num, box in enumerate(boxes):
-            pygame.draw.rect(screen, "BLUE", boxes[num])
-
-        for num, letter in enumerate(letter_list):
-            draw_text(letter, text_font, "YELLOW", boxes[num].x, boxes[num].y)
+        if game_paused == True:
+            pass
+            draw_text(resume_text, text_font, "RED", (SCREEN_WIDTH)/2 - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 2)
+        else:
+            draw_text(pause_text, text_font, "GREEN", (SCREEN_WIDTH)/2 - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 2)
+        # draw columns
+        # for col in col_boxes:
+        #     pygame.draw.rect(screen, "RED", col)
+        # # draw boxes and letters to screen
+        # for num, box in enumerate(boxes):
+        #     pygame.draw.rect(screen, "BLUE", boxes[num])
+        #     draw_text(letter_list[num], text_font, "YELLOW", boxes[num].x, boxes[num].y)
+    # UNCOMMENT ABOVE ONCE PAUSE TESTING COMPLETE
 
     # EVENTS (CLICK N DRAG)--v
         for event in pygame.event.get():
+
+            # KEY DOWN
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if game_paused:
+                        game_paused = False
+                    else:
+                        game_paused = True
             # click and drag event. Check for MOUSEBUTTONDOWN and MOUSEBUTTONUP event.button == 1
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # LEFT CLICK
                 if event.button == 1:
-                    for num, box in enumerate(boxes):
-                        if box.collidepoint(event.pos):
+                    # for num, box in enumerate(boxes):
+                    #     if box.collidepoint(event.pos):
+                    #         active_box = num
+                    for num, col_box in enumerate(col_boxes):
+                        if col_box.collidepoint(event.pos):
                             active_box = num
         # MOUSE MOVEMENT
             if event.type == pygame.MOUSEMOTION:
                 if active_box is not None:
                     _, y = event.rel
-                    boxes[active_box].move_ip(0, y)
+                    # boxes[active_box].move_ip(0, y)
+                    col_boxes[active_box].move_ip(0, y)
         # RELEASE MOUSE BUTTON
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
