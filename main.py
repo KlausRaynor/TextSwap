@@ -9,8 +9,6 @@ PyGame: https://www.pygame.org/docs/
 TypeShift: http://www.playtypeshift.com/
 """
 
-import generate_words
-from button import *
 from helpers import *
 from session_setup import *
 
@@ -28,15 +26,19 @@ def main():
     play_clicked = False
     # for button animation
     button_clicked = False
+    show_game_screen = False
+    show_start_screen = True
+    show_pause_screen = False
 
     text_font = helpers.get_text_font()
     # for click and drag option
     active_box = None
 
-    pause_text = "Press SPACE to pause"
-    resume_text = "Press SPACE to resume"
+    pause_text = "Press ESC to pause"
+    resume_text = "Press ESC to resume"
 
-    play_buttons = create_play_buttons()
+    all_buttons = create_buttons()
+
 
     # END TESTING ****
 # MAIN GAME LOOP
@@ -44,18 +46,27 @@ def main():
     while running:
         screen.fill((202, 228, 241))
 
-    # BUTTON ANIMATION
-        if button_clicked:
-            play_buttons[1].draw_button(screen)
-        elif not button_clicked:
-            play_buttons[0].draw_button(screen)
+        if show_start_screen:
+        # BUTTON ANIMATION
+            play_button = []
+            if button_clicked:
+                for b in all_buttons:
+                    if "play_button_pressed" in b[0]:
+                        play_button.append(b)
+                        b[1].draw_button(screen)
+                play_clicked = True
+            elif not button_clicked:
+                for b in all_buttons:
+                    if "play_button_ready" in b[0]:
+                        play_button.append(b)
+                        b[1].draw_button(screen)
     # PAUSE MENU
         if game_paused:
             pass
             draw_text(resume_text, text_font, "RED",
                       SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 2, screen)
         else:
-            draw_text(pause_text, text_font, "GREEN",
+            draw_text(pause_text, text_font, "BLACK",
                       SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 2, screen)
     # GAME MENU
         if play_clicked:
@@ -69,17 +80,19 @@ def main():
 
             # KEY DOWN
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     if game_paused:
                         game_paused = False
+                        show_start_screen = False
                     else:
                         game_paused = True
+                        show_start_screen = True
             # click and drag event. Check for MOUSEBUTTONDOWN and MOUSEBUTTONUP event.button == 1
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 # LEFT CLICK
                 if event.button == 1:
-                    if play_buttons[1].rect.collidepoint(event.pos):
+                    if all_buttons[1][1].rect.collidepoint(event.pos):
                         button_clicked = True
                     # for num, box in enumerate(boxes):
                     #     if box.collidepoint(event.pos):

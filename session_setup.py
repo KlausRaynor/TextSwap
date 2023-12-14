@@ -1,14 +1,13 @@
 import generate_words
-import pygame
 import helpers
 from button import *
-
+import os
 pygame.font.init()
 
 col_boxes = []
 boxes = []
 letter_list = []
-text_font = helpers.get_text_font()
+font = helpers.get_text_font()
 button_list = []
 BOX_WIDTH = 50
 BOX_HEIGHT = 50
@@ -57,22 +56,23 @@ def start_main_game(screen):
     # draw boxes and letters to screen
     for num, box in enumerate(boxes):
         pygame.draw.rect(screen, "BLUE", boxes[num])
-        helpers.draw_text(letter_list[num], text_font, "YELLOW", boxes[num].x, boxes[num].y, screen)
+        helpers.draw_text(letter_list[num], font, "YELLOW", boxes[num].x, boxes[num].y, screen)
 
 
-def create_play_buttons():
+def create_buttons():
+    # get all images from folder
+    image_list = []
+    # button directory
+    img_dir = 'assets/images/buttons/'
+    images = os.listdir(img_dir)
     # load in button images
-    play_ready_img = pygame.image.load('images/play_button_ready.png').convert_alpha()
-    play_pressed_img = pygame.image.load('images/play_button_pressed.png').convert_alpha()
-
-    # create buttons
-    play_button = Button((SCREEN_WIDTH / 2) - ((play_ready_img.get_width() * SCALE) / 2), (SCREEN_HEIGHT / 4),
-                         play_ready_img,
-                         SCALE)
-    play_button_pressed = Button((SCREEN_WIDTH / 2) - ((play_pressed_img.get_width() * SCALE) / 2),
-                                 (SCREEN_HEIGHT / 4),
-                                 play_pressed_img, SCALE)
-
-    button_list.append(play_button)
-    button_list.append(play_button_pressed)
+    button_dir = []
+    for button in images:
+        button_dir = [button, img_dir + button]
+        image_list.append(pygame.image.load(button_dir[1]).convert_alpha())
+    # create buttons and set position
+    # currently all buttons in same pos.
+    for n, img in enumerate(image_list):
+        button_list.append([images[n],Button((SCREEN_WIDTH / 2) - ((img.get_width() * SCALE) / 2), (SCREEN_HEIGHT / 4),
+                                  img, SCALE)])
     return button_list

@@ -9,7 +9,7 @@ def get_keywords():
     addtl_words = []
     # noinspection SpellCheckingInspection
     full_word_list = []
-    with open('wordlist/umich_wordlist.txt', 'r') as f:
+    with open('assets/wordlist/umich_wordlist.txt', 'r') as f:
         for word in f:
             word = word.strip()
             if len(word) == WORD_LENGTH:
@@ -114,4 +114,5 @@ def validate_word(word):
             return True
     except Exception as e:
         if response_ans["title"] == "No Definitions Found":
+            print(e)
             return False
