@@ -1,19 +1,27 @@
 import generate_words
 import pygame
 import helpers
+from button import *
+
+pygame.font.init()
 
 col_boxes = []
 boxes = []
 letter_list = []
 text_font = helpers.get_text_font()
+button_list = []
+BOX_WIDTH = 50
+BOX_HEIGHT = 50
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 480
+
+SCALE = 3
+
 
 def setup_session():
-    BOX_WIDTH = 50
-    BOX_HEIGHT = 50
 
     box_x = 100
     box_y = 100
-
     # get words for game from generate_words.py
     word_list = generate_words.get_keywords()
     print("Word list: ", word_list)
@@ -50,3 +58,21 @@ def start_main_game(screen):
     for num, box in enumerate(boxes):
         pygame.draw.rect(screen, "BLUE", boxes[num])
         helpers.draw_text(letter_list[num], text_font, "YELLOW", boxes[num].x, boxes[num].y, screen)
+
+
+def create_play_buttons():
+    # load in button images
+    play_ready_img = pygame.image.load('images/play_button_ready.png').convert_alpha()
+    play_pressed_img = pygame.image.load('images/play_button_pressed.png').convert_alpha()
+
+    # create buttons
+    play_button = Button((SCREEN_WIDTH / 2) - ((play_ready_img.get_width() * SCALE) / 2), (SCREEN_HEIGHT / 4),
+                         play_ready_img,
+                         SCALE)
+    play_button_pressed = Button((SCREEN_WIDTH / 2) - ((play_pressed_img.get_width() * SCALE) / 2),
+                                 (SCREEN_HEIGHT / 4),
+                                 play_pressed_img, SCALE)
+
+    button_list.append(play_button)
+    button_list.append(play_button_pressed)
+    return button_list

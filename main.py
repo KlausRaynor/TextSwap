@@ -18,9 +18,6 @@ from session_setup import *
 # noinspection SpellCheckingInspection
 def main():
     pygame.init()
-    SCREEN_WIDTH = 640
-    SCREEN_HEIGHT = 480
-    SCALE = 3
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("TextSwap - A Game by Klaus Holder")
@@ -29,29 +26,17 @@ def main():
     # Game Variables
     game_paused = False
     play_clicked = False
+    # for button animation
+    button_clicked = False
 
-    button_list = []
-    # load in button images
-    play_ready_img = pygame.image.load('images/play_button_ready.png').convert_alpha()
-    play_pressed_img = pygame.image.load('images/play_button_pressed.png').convert_alpha()
-
-    text_font = helpers.get_font()
+    text_font = helpers.get_text_font()
     # for click and drag option
     active_box = None
 
     pause_text = "Press SPACE to pause"
     resume_text = "Press SPACE to resume"
 
-# create buttons
-    play_button = Button((SCREEN_WIDTH / 2) - ((play_ready_img.get_width() * SCALE) / 2), (SCREEN_HEIGHT / 4), play_ready_img,
-                         SCALE)
-    play_button_pressed = Button((SCREEN_WIDTH / 2) - ((play_pressed_img.get_width() * SCALE) / 2), (SCREEN_HEIGHT / 4),
-                                 play_pressed_img, SCALE)
-
-    button_clicked = False
-
-    button_list.append(play_button)
-    button_list.append(play_button_pressed)
+    play_buttons = create_play_buttons()
 
     # END TESTING ****
 # MAIN GAME LOOP
@@ -59,10 +44,11 @@ def main():
     while running:
         screen.fill((202, 228, 241))
 
+    # BUTTON ANIMATION
         if button_clicked:
-            play_button_pressed.draw_button(screen)
+            play_buttons[1].draw_button(screen)
         elif not button_clicked:
-            play_button.draw_button(screen)
+            play_buttons[0].draw_button(screen)
     # PAUSE MENU
         if game_paused:
             pass
@@ -93,7 +79,7 @@ def main():
 
                 # LEFT CLICK
                 if event.button == 1:
-                    if play_button.rect.collidepoint(event.pos):
+                    if play_buttons[1].rect.collidepoint(event.pos):
                         button_clicked = True
                     # for num, box in enumerate(boxes):
                     #     if box.collidepoint(event.pos):
