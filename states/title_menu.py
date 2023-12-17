@@ -1,6 +1,6 @@
 import pygame
 from .base_state import BaseState
-
+from button import Button
 
 class Menu(BaseState):
     def __init__(self):
@@ -8,6 +8,9 @@ class Menu(BaseState):
         self.active_index = 0
         self.options = ["Start Game", "Quit Game"]
         self.next_state = "GAME_BOARD"
+
+    def create_button(self, button):
+        pass
 
     def draw_text(self, index):
         color = pygame.Color("PURPLE") if index == self.active_index else pygame.Color("BLUE")
@@ -33,6 +36,7 @@ class Menu(BaseState):
                 self.active_index = 0 if self.active_index >= 1 else 1
             elif event.key == pygame.K_RETURN:
                 self.action_handler()
+
 
     def draw(self, surface):
         surface.fill(pygame.Color("WHITE"))
