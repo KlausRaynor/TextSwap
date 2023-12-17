@@ -5,6 +5,13 @@ WORD_LENGTH = 6
 
 
 # noinspection SpellCheckingInspection
+
+"""
+get_keywords pulls a random 6 letter word from one of the dictionaries. 
+
+"""
+
+
 def get_keywords():
     addtl_words = []
     # noinspection SpellCheckingInspection

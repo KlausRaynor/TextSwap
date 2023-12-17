@@ -1,4 +1,5 @@
 from button import *
+import os
 
 
 def draw_text(text, font, text_col, tx, ty, screen):
@@ -8,7 +9,7 @@ def draw_text(text, font, text_col, tx, ty, screen):
 
 def get_text_font():
     pygame.font.init()
-    font = pygame.font.Font("assets/fonts/baveuse.ttf", 30)
+    font = pygame.font.Font(os.path.join("assets", "fonts", "baveuse.ttf"), 30)
     return font
 
 
