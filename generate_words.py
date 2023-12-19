@@ -1,22 +1,29 @@
 import random
 import requests
 
-WORD_LENGTH = 6
+WORD_LENGTH = random.randint(4,6)
 
+word_lists = [
+    "mit_",
+    "umich_"
+]
 
 # noinspection SpellCheckingInspection
 
 """
 get_keywords pulls a random 6 letter word from one of the dictionaries. 
-
+compares them with dictionary API to validate and ensure they're relatively common
 """
 
 
+# noinspection SpellCheckingInspection
 def get_keywords():
+    chosen_list = random.choice(word_lists)
+    print("chosen word list: ", chosen_list)
     addtl_words = []
     # noinspection SpellCheckingInspection
     full_word_list = []
-    with open('assets/wordlist/umich_wordlist.txt', 'r') as f:
+    with open('assets/wordlist/' + chosen_list + 'wordlist.txt', 'r') as f:
         for word in f:
             word = word.strip()
             if len(word) == WORD_LENGTH:
@@ -61,6 +68,8 @@ def get_keywords():
     while True:
         kw_two = random.choice(first_index_list)
         kw_three = random.choice(second_index_list)
+        if kw_two == key_word or kw_three == key_word:
+            continue
         val_two = validate_word(kw_two)
         if val_two:
             kw_three = random.choice(second_index_list)

@@ -5,8 +5,8 @@ from .base_state import BaseState
 class SplashScreen(BaseState):
     def __init__(self):
         super(SplashScreen, self).__init__()
-        self.title = self.font.render("TextSwap", True, pygame.Color("BLUE"))
-        self.attribution = self.font.render("A Game by Klaus Holder", True, pygame.Color("BLUE"))
+        self.title = self.title_font.render("TextSwap", True, pygame.Color("BLUE"))
+        self.attribution = self.attr_font.render("A Game by Klaus Holder", True, pygame.Color("BLUE"))
         self.title_rect = self.title.get_rect(center=self.screen_rect.center)
         self.attribution_rect = self.attribution.get_rect(center=self.screen_rect.center)
         self.next_state = "MENU"
@@ -27,5 +27,5 @@ class SplashScreen(BaseState):
     def draw(self, surface):
         surface.fill(pygame.Color("WHITE"))
         surface.blit(self.title, self.title_rect)
-        surface.blit(self.attribution, (self.attribution_rect.x, self.attribution_rect.y + 50))
+        surface.blit(self.attribution, (self.attribution_rect.x, self.attribution_rect.y + 150))
 

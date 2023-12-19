@@ -9,42 +9,41 @@ class GameBoard(BaseState):
         self.rect = pygame.Rect((0,0), (80,80))
         self.rect.center = self.screen_rect.center
         self.next_state = "GAME_OVER"
+        self.columns = session_setup.get_col_boxes()
 
     # CONTINUE STARTUP TO LOAD BOARD + WORDS
+
     def startup(self, persistent):
-        session_setup.setup_session()
+        session_setup.setup_session(self.rect.center)
 
     def get_event(self, event):
+        active_col = None
         if event.type == pygame.QUIT:
             self.quit = True
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                self.rect.move_ip(0, -10)
-            if event.key == pygame.K_DOWN:
-                self.rect.move_ip(0, 10)
-            if event.key == pygame.K_LEFT:
-                self.rect.move_ip(-10, 0)
-            if event.key == pygame.K_RIGHT:
-                self.rect.move_ip(10, 0)
+        if event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
                 self.done = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                for n, col in enumerate(self.columns):
+                    if col.collidepoint(event.pos):
+                        print("Column ", n, " clicked.")
+                        active_col = n
+                        print("active_col: ", active_col)
+        if event.type == pygame.MOUSEMOTION:
+            if active_col is not None:
+                _, y = event.rel
+                self.columns[active_col].move_ip(0, y)
+
+    def update(self, dt):
+        pass
 
     def draw(self, surface):
         surface.fill(pygame.Color("WHITE"))
         pygame.draw.rect(surface, pygame.Color("BLUE"), self.rect)
-        session_setup.start_main_game(surface)
+        for col in self.columns:
+            pygame.draw.rect(surface, "GREEN", col)
+
+        # session_setup.start_main_game(surface)
 
 
-    #     self.play_button = pygame.image.load(os.path.join(self.game.buttons_dir, "quit_button.png"))
-    #
-    #
-    # def update(self, delta_time, actions):
-    #     if actions["play"]:
-    #         new_state = PauseMenu(self.game)
-    #         new_state.enter_state()
-    #
-    # def render(self, display):
-    #     display.blit(self.play_button, (0, 0))
-    #
-    # def animate(self, delta_time):
-    #     pass
