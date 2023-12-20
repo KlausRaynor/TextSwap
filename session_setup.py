@@ -15,7 +15,6 @@ SCALE = 3
 
 
 def setup_session(center_screen):
-    print("center_screen: ", center_screen)
     box_x = center_screen[0] - (BOX_WIDTH * 3)
     box_y = 100
     # get words for game from generate_words.py
@@ -50,11 +49,12 @@ def get_col_boxes():
     return col_boxes
 
 
-def start_main_game(screen):
-    # this needs to be repeated in MAIN
-    for col in col_boxes:
-        pygame.draw.rect(screen, "RED", col)
-    # draw boxes and letters to screen
+def get_boxes():
+    return boxes
+
+
+def get_letters():
+    letters = []
     for num, box in enumerate(boxes):
-        pygame.draw.rect(screen, "BLUE", boxes[num])
-        helpers.draw_text(letter_list[num], font, "YELLOW", boxes[num].x, boxes[num].y, screen)
+        letters.append([letter_list[num], font, "YELLOW", boxes[num].x, boxes[num].y])
+    return letters

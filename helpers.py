@@ -16,3 +16,8 @@ def get_text_font():
 def button_animation(b_list):
     for b in b_list:
         b.draw_button()
+
+
+def scale_image(image, scale):
+    scaled_img = pygame.transform.scale(image, (image.get_width() * scale, image.get_height() * scale))
+    return scaled_img

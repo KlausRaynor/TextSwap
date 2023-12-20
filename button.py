@@ -12,3 +12,7 @@ class Button:
 
     def update(self, delta_time, actions):
         pass
+
+    def click_event(self):
+        pass
+

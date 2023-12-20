@@ -7,6 +7,7 @@ Dictionary lists courtesy of MIT and UMichigan
 Dictionary API used: https://dictionaryapi.dev/
 PyGame: https://www.pygame.org/docs/
 TypeShift: http://www.playtypeshift.com/
+Additional information and attributions found in the README
 """
 
 

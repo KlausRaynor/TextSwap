@@ -130,5 +130,6 @@ def validate_word(word):
             return True
     except Exception as e:
         if response_ans["title"] == "No Definitions Found":
-            print(e)
-            return False
+            if e == 0:
+                print("word: ", word, "error: ", e)
+                return False
