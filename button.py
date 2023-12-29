@@ -15,4 +15,3 @@ class Button:
 
     def click_event(self):
         pass
-

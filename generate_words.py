@@ -119,6 +119,7 @@ def create_sets(word_list):
 
 
 def validate_word(word):
+    print("validating word: ", word)
     # check key_word validity against API
     url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word
     response = requests.get(url)
